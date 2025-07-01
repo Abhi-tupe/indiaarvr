@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrueSight India - Start Your Journey</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+  background-image: url('assets/images/india-collage.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+
+    .overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: none;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #000;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #ff9800;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #e67e00;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+      color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Explore India Visually</h1>
+    <form id="userForm" onsubmit="return goToMonumentsPage()">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" required>
+
+      <label for="age">Your Age</label>
+      <input type="number" id="age" required min="1" max="120">
+
+      <label for="gender">Gender</label>
+      <select id="gender" required>
+        <option value="">-- Select --</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+
+      <label for="state">Your State (India)</label>
+      <input list="states" id="state" required>
+      <datalist id="states">
+        <option value="Delhi">
+        <option value="Gujarat">
+        <option value="Maharashtra">
+        <option value="Rajasthan">
+        <option value="Uttar Pradesh">
+        <option value="Kerala">
+        <option value="Tamil Nadu">
+        <!-- Add more states here -->
+      </datalist>
+
+      <button type="submit">Start Exploring</button>
+    </form>
+
+    <div class="footer-note">
+      "See the beauty before you arrive. The future of travel is trust."
+    </div>
+  </div>
+
+  <script>
+    function goToMonumentsPage() {
+      const name = document.getElementById("name").value.trim();
+      const age = document.getElementById("age").value.trim();
+      const gender = document.getElementById("gender").value;
+      const state = document.getElementById("state").value.trim();
+
+      if (!name || !age || !gender || !state) {
+        alert("Please fill out all fields.");
+        return false;
+      }
+
+      localStorage.setItem("userInfo", JSON.stringify({ name, age, gender, state }));
+
+      window.location.href = "monuments.html";
+      return false;
+    }
+  </script>
+</body>
+</html>
