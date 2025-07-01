@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Red Fort",
+    "state": "Delhi",
+    "image": "redfort.webp",
+    "description": "Historic Mughal-era fort in Delhi.",
+    "videoUrl": "https://www.youtube.com/embed/lNB0qSBjboo"
+  },
+  {
+    "name": "Statue of Unity",
+    "state": "Gujarat",
+    "image": "unity.webp",
+    "description": "World's tallest statue located in Kevadia.",
+    "videoUrl": "https://www.youtube.com/embed/lNB0qSBjboo"
+  },
+  {
+    "name": "Gateway of India",
+    "state": "Maharashtra",
+    "image": "gatewayindia.webp",
+    "description": "Iconic arch monument in Mumbai, overlooking the Arabian Sea.",
+    "videoUrl": "https://www.youtube.com/embed/VoM9KoSyZso"
+  },
+  {
+    "name": "Taj Mahal",
+    "state": "Uttar Pradesh",
+    "image": "taj mahal.png",
+    "description": "Majestic white marble mausoleum in Agra, a UNESCO World Heritage Site.",
+    "videoUrl": "https://www.youtube.com/embed/JuCcugJEMEg"
+  }
+]
