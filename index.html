@@ -5,29 +5,26 @@
   <title>TrueSight India - Start Your Journey</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    /* ... your existing styles (unchanged) ... */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body, html {
       height: 100%;
       font-family: 'Segoe UI', sans-serif;
     }
-
     body {
-  background-image: url('assets/images/india-collage.webp');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-
+      background-image: url('assets/images/india-collage.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
     .overlay {
       position: absolute;
       width: 100%;
@@ -35,7 +32,6 @@
       background-color: rgba(0, 0, 0, 0.5);
       z-index: 0;
     }
-
     .container {
       position: relative;
       z-index: 1;
@@ -48,19 +44,16 @@
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       color: white;
     }
-
     h1 {
       text-align: center;
       margin-bottom: 30px;
       font-size: 28px;
     }
-
     label {
       display: block;
       margin-bottom: 6px;
       font-weight: 500;
     }
-
     input, select {
       width: 100%;
       padding: 10px;
@@ -70,7 +63,6 @@
       background-color: rgba(255, 255, 255, 0.9);
       color: #000;
     }
-
     button {
       width: 100%;
       padding: 12px;
@@ -83,11 +75,9 @@
       cursor: pointer;
       transition: 0.3s ease;
     }
-
     button:hover {
       background-color: #e67e00;
     }
-
     .footer-note {
       text-align: center;
       font-size: 14px;
@@ -125,7 +115,6 @@
         <option value="Uttar Pradesh">
         <option value="Kerala">
         <option value="Tamil Nadu">
-        <!-- Add more states here -->
       </datalist>
 
       <button type="submit">Start Exploring</button>
@@ -136,7 +125,38 @@
     </div>
   </div>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9HMVcebna6spi3Y28mYIjRbKPq6FaPLA",
+      authDomain: "indiaarvr.firebaseapp.com",
+      projectId: "indiaarvr",
+      storageBucket: "indiaarvr.firebasestorage.app",
+      messagingSenderId: "696399060020",
+      appId: "1:696399060020:web:f8c2c7ca75b5fe61acfe61",
+      measurementId: "G-E2FTVBJ0KL"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function saveUserData(name, age, gender, state) {
+      db.collection("users").add({
+        name,
+        age,
+        gender,
+        state,
+        timestamp: new Date()
+      }).then(() => {
+        console.log("User data saved.");
+      }).catch((err) => {
+        console.error("Error:", err);
+      });
+    }
+
     function goToMonumentsPage() {
       const name = document.getElementById("name").value.trim();
       const age = document.getElementById("age").value.trim();
@@ -148,8 +168,8 @@
         return false;
       }
 
+      saveUserData(name, age, gender, state);
       localStorage.setItem("userInfo", JSON.stringify({ name, age, gender, state }));
-
       window.location.href = "monuments.html";
       return false;
     }
