@@ -5,7 +5,6 @@
   <title>Monument Details</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    /* Your styles remain unchanged */
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
@@ -52,8 +51,7 @@
       margin-bottom: 30px;
     }
 
-    .video-preview iframe,
-    .video-preview video {
+    .video-preview iframe {
       width: 100%;
       aspect-ratio: 16 / 9;
       border-radius: 12px;
@@ -62,10 +60,7 @@
 
     .review-section {
       text-align: center;
-    }
-
-    .review-section h3 {
-      margin-bottom: 10px;
+      margin-top: 30px;
     }
 
     .review-buttons button {
@@ -97,7 +92,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
   <script>
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyC9HMVcebna6spi3Y28mYIjRbKPq6FaPLA",
       authDomain: "indiaarvr.firebaseapp.com",
@@ -111,23 +105,81 @@
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Save view to Firestore
     document.addEventListener("DOMContentLoaded", () => {
       const placeName = localStorage.getItem("selectedPlace");
       const user = JSON.parse(localStorage.getItem("userInfo"));
 
-      if (placeName && user) {
-        db.collection("views").add({
-          place: placeName,
-          user: user.name,
-          state: user.state,
-          timestamp: new Date()
-        }).then(() => {
-          console.log("View saved to Firestore.");
-        }).catch(err => {
-          console.error("Error saving view:", err);
-        });
+      if (!placeName || !user) {
+        document.getElementById("monumentDetails").innerHTML = "<p>Error loading monument details.</p>";
+        return;
       }
+
+      // Save view to Firestore
+      db.collection("views").add({
+        place: placeName,
+        user: user.name,
+        state: user.state,
+        timestamp: new Date()
+      }).then(() => {
+        console.log("View saved to Firestore.");
+      }).catch(err => {
+        console.error("Error saving view:", err);
+      });
+
+      // Sample static data (replace this with dynamic fetch if needed)
+      const monuments = [
+        {
+          name: "Red Fort",
+          image: "redfort.webp",
+          description: "Historic Mughal-era fort in Delhi.",
+          videoUrl: "https://www.youtube.com/embed/lNB0qSBjboo"
+        },
+        {
+          name: "Statue of Unity",
+          image: "unity.webp",
+          description: "World's tallest statue located in Kevadia.",
+          videoUrl: "https://www.youtube.com/embed/lNB0qSBjboo"
+        },
+        {
+          name: "Gateway of India",
+          image: "gatewayindia.webp",
+          description: "Iconic arch monument in Mumbai, overlooking the Arabian Sea.",
+          videoUrl: "https://www.youtube.com/embed/VoM9KoSyZso"
+        },
+        {
+          name: "Taj Mahal",
+          image: "taj mahal.png",
+          description: "Majestic white marble mausoleum in Agra, a UNESCO World Heritage Site.",
+          videoUrl: "https://www.youtube.com/embed/JuCcugJEMEg"
+        }
+      ];
+
+      const monument = monuments.find(m => m.name === placeName);
+
+      if (!monument) {
+        document.getElementById("monumentDetails").innerHTML = "<p>Monument not found.</p>";
+        return;
+      }
+
+      // Display details
+      document.getElementById("monumentDetails").innerHTML = `
+        <div class="monument-header">
+          <img src="assets/images/${monument.image}" alt="${monument.name}">
+          <h1>${monument.name}</h1>
+          <p class="description">${monument.description}</p>
+        </div>
+        <div class="video-preview">
+          <iframe src="${monument.videoUrl}" allowfullscreen></iframe>
+        </div>
+        <div class="review-section">
+          <h3>Share Your Experience</h3>
+          <div class="review-buttons">
+            <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd6tRuZffcuJub9THbSWMiPQ-T5DCJYRxfPUbrnexCJloplGQ/viewform?usp=header', '_blank')">
+              Review Monument
+            </button>
+          </div>
+        </div>
+      `;
     });
   </script>
 </body>
