@@ -51,7 +51,8 @@
       margin-bottom: 30px;
     }
 
-    .video-preview iframe {
+    .video-preview iframe,
+    .video-preview video {
       width: 100%;
       aspect-ratio: 16 / 9;
       border-radius: 12px;
@@ -60,34 +61,31 @@
 
     .review-section {
       text-align: center;
-      margin-top: 30px;
+      margin-bottom: 40px;
     }
 
-    .review-buttons button {
-      margin: 6px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
+    .review-section button {
+      padding: 12px 24px;
+      font-size: 16px;
       background-color: #4CAF50;
       color: white;
-      font-size: 14px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.3s;
     }
 
-    .review-buttons button:hover {
+    .review-section button:hover {
       background-color: #388e3c;
     }
   </style>
 </head>
 <body>
   <div class="container" id="monumentDetails">
-    <!-- Dynamic content will be loaded here -->
+    <!-- Dynamic content loaded by JS -->
   </div>
 
-  <script src="js/place.js"></script>
-
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
@@ -106,80 +104,69 @@
     const db = firebase.firestore();
 
     document.addEventListener("DOMContentLoaded", () => {
-      const placeName = localStorage.getItem("selectedPlace");
+      const monumentName = localStorage.getItem("selectedPlace");
       const user = JSON.parse(localStorage.getItem("userInfo"));
 
-      if (!placeName || !user) {
-        document.getElementById("monumentDetails").innerHTML = "<p>Error loading monument details.</p>";
+      if (!monumentName) {
+        alert("No monument selected. Redirecting...");
+        window.location.href = "monuments.html";
         return;
       }
 
-      // Save view to Firestore
-      db.collection("views").add({
-        place: placeName,
-        user: user.name,
-        state: user.state,
-        timestamp: new Date()
-      }).then(() => {
-        console.log("View saved to Firestore.");
-      }).catch(err => {
-        console.error("Error saving view:", err);
-      });
-
-      // Sample static data (replace this with dynamic fetch if needed)
-      const monuments = [
-        {
-          name: "Red Fort",
-          image: "redfort.webp",
-          description: "Historic Mughal-era fort in Delhi.",
-          videoUrl: "https://www.youtube.com/embed/lNB0qSBjboo"
-        },
-        {
-          name: "Statue of Unity",
-          image: "unity.webp",
-          description: "World's tallest statue located in Kevadia.",
-          videoUrl: "https://www.youtube.com/embed/lNB0qSBjboo"
-        },
-        {
-          name: "Gateway of India",
-          image: "gatewayindia.webp",
-          description: "Iconic arch monument in Mumbai, overlooking the Arabian Sea.",
-          videoUrl: "https://www.youtube.com/embed/VoM9KoSyZso"
-        },
-        {
-          name: "Taj Mahal",
-          image: "taj mahal.png",
-          description: "Majestic white marble mausoleum in Agra, a UNESCO World Heritage Site.",
-          videoUrl: "https://www.youtube.com/embed/JuCcugJEMEg"
-        }
-      ];
-
-      const monument = monuments.find(m => m.name === placeName);
-
-      if (!monument) {
-        document.getElementById("monumentDetails").innerHTML = "<p>Monument not found.</p>";
-        return;
+      // Save view
+      if (user) {
+        db.collection("views").add({
+          place: monumentName,
+          user: user.name,
+          state: user.state,
+          timestamp: new Date()
+        }).then(() => {
+          console.log("View saved to Firestore.");
+        }).catch(err => {
+          console.error("Error saving view:", err);
+        });
       }
 
-      // Display details
-      document.getElementById("monumentDetails").innerHTML = `
-        <div class="monument-header">
-          <img src="assets/images/${monument.image}" alt="${monument.name}">
-          <h1>${monument.name}</h1>
-          <p class="description">${monument.description}</p>
-        </div>
-        <div class="video-preview">
-          <iframe src="${monument.videoUrl}" allowfullscreen></iframe>
-        </div>
-        <div class="review-section">
-          <h3>Share Your Experience</h3>
-          <div class="review-buttons">
-            <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSd6tRuZffcuJub9THbSWMiPQ-T5DCJYRxfPUbrnexCJloplGQ/viewform?usp=header', '_blank')">
-              Review Monument
-            </button>
-          </div>
-        </div>
-      `;
+      // Load monument content
+      fetch("data/monuments.json")
+        .then(res => res.json())
+        .then(data => {
+          const monument = data.find(m => m.name === monumentName);
+          if (!monument) {
+            document.getElementById("monumentDetails").innerHTML = "<p>Monument not found.</p>";
+            return;
+          }
+
+          const videoEmbed = monument.videoUrl
+            ? `<iframe src="${monument.videoUrl}" 
+                      title="${monument.name} 360 View"
+                      frameborder="0" 
+                      allowfullscreen>
+               </iframe>`
+            : `<p>No video available for this monument.</p>`;
+
+          const html = `
+            <div class="video-preview">
+              <h3>360° View of ${monument.name}</h3>
+              ${videoEmbed}
+            </div>
+
+            <div class="review-section">
+              <h3>Review this Monument</h3>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSd6tRuZffcuJub9THbSWMiPQ-T5DCJYRxfPUbrnexCJloplGQ/viewform?usp=sf_link" 
+                 target="_blank">
+                <button>Review Monument</button>
+              </a>
+            </div>
+
+            <div class="monument-header">
+              <h1>${monument.name}</h1>
+              <p class="description">${monument.description}</p>
+            </div>
+          `;
+
+          document.getElementById("monumentDetails").innerHTML = html;
+        });
     });
   </script>
 </body>
