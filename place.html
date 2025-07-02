@@ -5,6 +5,7 @@
   <title>Monument Details</title>
   <link rel="stylesheet" href="css/styles.css">
   <style>
+    /* Your styles remain unchanged */
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
@@ -26,9 +27,9 @@
 
     .monument-header img {
       width: 100%;
-      aspect-ratio: 4 / 3;          /* Consistent shape */
-      object-fit: contain;          /* ✅ Show full image */
-      background-color: #f0f0f0;    /* Clean background */
+      aspect-ratio: 4 / 3;
+      object-fit: contain;
+      background-color: #f0f0f0;
       border-radius: 12px;
       padding: 10px;
       margin-bottom: 20px;
@@ -90,5 +91,44 @@
   </div>
 
   <script src="js/place.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyC9HMVcebna6spi3Y28mYIjRbKPq6FaPLA",
+      authDomain: "indiaarvr.firebaseapp.com",
+      projectId: "indiaarvr",
+      storageBucket: "indiaarvr.firebasestorage.app",
+      messagingSenderId: "696399060020",
+      appId: "1:696399060020:web:f8c2c7ca75b5fe61acfe61",
+      measurementId: "G-E2FTVBJ0KL"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Save view to Firestore
+    document.addEventListener("DOMContentLoaded", () => {
+      const placeName = localStorage.getItem("selectedPlace");
+      const user = JSON.parse(localStorage.getItem("userInfo"));
+
+      if (placeName && user) {
+        db.collection("views").add({
+          place: placeName,
+          user: user.name,
+          state: user.state,
+          timestamp: new Date()
+        }).then(() => {
+          console.log("View saved to Firestore.");
+        }).catch(err => {
+          console.error("Error saving view:", err);
+        });
+      }
+    });
+  </script>
 </body>
 </html>
