@@ -115,14 +115,16 @@
         <option>Other</option>
       </select>
 
-      <label for="state">Your State (India)</label>
-      <input list="states" id="state" required>
-      <datalist id="states">
-        <option value="Delhi">
-        <option value="Gujarat">
-        <option value="Maharashtra">
-        <option value="Uttar Pradesh">
-      </datalist>
+<label for="state">Your State (India)</label>
+<select id="state" required>
+  <option value="">-- Select State --</option>
+  <option value="Delhi">Delhi</option>
+  <option value="Gujarat">Gujarat</option>
+  <option value="Maharashtra">Maharashtra</option>
+  <option value="Uttar Pradesh">Uttar Pradesh</option>
+  <!-- Add more states as needed -->
+</select>
+
 
       <button type="submit">Start Exploring</button>
     </form>
